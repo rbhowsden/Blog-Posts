@@ -14,44 +14,67 @@ power_dist = [.20, .133, .0889, .059260, .03951, .02634, .017559, .011706, .0078
 
 import random
 
-def random_selection(dist, r_num, r_size, c_size, c_growth, method):
+def random_selection(dist, r_num, r_size, c_size, c_growth):
 
-    total_sold = 0
     dist_length = len(dist)
     if c_size % dist_length != 0:
         print('bad, choose better parameters')
 
     full_catalog = dist*int(c_size/dist_length)
-    items = [(i, x) for i, x in enumerate(full_catalog)]
+    items = [(i, x, x*random.random()*2) for i, x in enumerate(full_catalog)]
+    current_i = len(items)
     random.shuffle(items)
     
+    total_sold = 0
     for _ in range(r_num):
-        for item in random.sample(items, r_size):
-            if random.random() <= item[1]:
+        for item in items[0:r_size]:
+            if random.random() <= item[2]:
                 items.remove(item)
                 total_sold += 1
+        new_items = random.sample(dist, c_growth)
+        new_items = [(current_i + i, x, x*random.random()*2) for i, x in enumerate(new_items)]
+        items += new_items
+        random.shuffle(items)
+        current_i += c_growth
     
     return total_sold
 
 
 def popular_selection(dist, r_num, r_size, c_size, c_growth):
 
-    total_sold = 0
     dist_length = len(dist)
     if c_size % dist_length != 0:
         print('bad, choose better parameters')
 
     full_catalog = dist*int(c_size/dist_length)
-    items = [(i, x) for i, x in enumerate(full_catalog)]
-    items.sort(key=lambda x: x[1], reverse=True))
+    items = [(i, x, x*random.random()*2) for i, x in enumerate(full_catalog)]
+    current_i = len(items)
+    items.sort(key=lambda x: x[1], reverse=True)
 
+    total_sold = 0
     for _ in range(r_num):
         for item in items[0:r_size]:
-            if random.random() <= item[1]:
+            if random.random() <= item[2]:
                 items.remove(item)
                 total_sold += 1
+        new_items = random.sample(dist, c_growth)
+        new_items = [(current_i + i, x, x*random.random()*2) for i, x in enumerate(new_items)]
+        items += new_items
+        items.sort(key=lambda x: x[1], reverse=True)
+        current_i += c_growth
     
     return total_sold
+
+def rank_items(items, method):
+    if method == "random":
+        random.shuffle(items)
+    elif method == "popular":
+        items.sort(key=lambda x: x[1], reverse=True)
+    elif method == "personal"
+        items.sort(key=lambda x: x[2], reverse=True)
+
+def add_items(items, current):
+    
 
 def personal_selection(dist, r_num, r_size, c_size, c_growth):
 
@@ -62,12 +85,19 @@ def personal_selection(dist, r_num, r_size, c_size, c_growth):
 
     full_catalog = dist*int(c_size/dist_length)
     items = [(i, x*random.random()*2) for i, x in enumerate(full_catalog)]
+    current_i = len(items)
     items.sort(key=lambda x: x[1], reverse=True)
 
+    total_sold = 0
     for _ in range(r_num):
         for item in items[0:r_size]:
             if random.random() <= item[1]:
                 items.remove(item)
                 total_sold += 1
+        new_items = random.sample(dist, c_growth)
+        new_items = [(current_i + i, x*random.random()*2) for i, x in enumerate(new_items)]
+        items += new_items
+        items.sort(key=lambda x: x[1], reverse=True)
+        current_i += c_growth
     
     return total_sold

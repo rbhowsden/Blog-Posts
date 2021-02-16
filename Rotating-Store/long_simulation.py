@@ -40,7 +40,7 @@ def random_selection(dist, r_num, r_size, c_size, c_growth):
     return total_sold
 
 
-def popular_selection(dist, r_num, r_size, c_size, c_growth):
+def rotate_simulation(dist, r_num, r_size, c_size, c_growth, method):
 
     dist_length = len(dist)
     if c_size % dist_length != 0:
@@ -49,7 +49,7 @@ def popular_selection(dist, r_num, r_size, c_size, c_growth):
     full_catalog = dist*int(c_size/dist_length)
     items = [(i, x, x*random.random()*2) for i, x in enumerate(full_catalog)]
     current_i = len(items)
-    items.sort(key=lambda x: x[1], reverse=True)
+    rank_items(items, method)
 
     total_sold = 0
     for _ in range(r_num):
@@ -60,7 +60,7 @@ def popular_selection(dist, r_num, r_size, c_size, c_growth):
         new_items = random.sample(dist, c_growth)
         new_items = [(current_i + i, x, x*random.random()*2) for i, x in enumerate(new_items)]
         items += new_items
-        items.sort(key=lambda x: x[1], reverse=True)
+        rank_items(items, method)
         current_i += c_growth
     
     return total_sold
@@ -70,11 +70,10 @@ def rank_items(items, method):
         random.shuffle(items)
     elif method == "popular":
         items.sort(key=lambda x: x[1], reverse=True)
-    elif method == "personal"
+    elif method == "personal":
         items.sort(key=lambda x: x[2], reverse=True)
 
-def add_items(items, current):
-    
+    return items
 
 def personal_selection(dist, r_num, r_size, c_size, c_growth):
 

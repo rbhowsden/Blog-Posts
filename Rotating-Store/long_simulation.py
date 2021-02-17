@@ -1,10 +1,6 @@
-
-
 uniform_dist = [0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03]
 linear_dist = [0.0525, 0.0475, 0.0425, 0.0375, 0.0325, 0.0275, 0.0225, 0.0175, 0.0125, 0.0075]
 plateau_dist = [.30, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-#EVERY PLAYER WILL HAVE DIFFERENT DISTRIBUTION
 
 r_num = 52
 r_size = 6
@@ -16,7 +12,7 @@ import random
 
 def rotate_simulation(dist, r_num, r_size, c_size, c_growth, method):
 
-    catalog = add_items([], c_size, dist, c_size)
+    catalog = add_items([], 0, dist, c_size)
     catalog = rank_items(catalog, method)
     index = c_size
 
@@ -45,7 +41,7 @@ def rank_items(catalog, method):
 def add_items(catalog, index, dist, number):
     q, r = divmod(number, len(dist))
     new_items = q*dist + random.sample(dist, r)
-    catalog = [(index + i, x, x*random.random()*2) for i, x in enumerate(new_items)]
+    catalog.extend([(index + i, x, x*random.random()*2) for i, x in enumerate(new_items)])
 
     return catalog
 
